@@ -28,12 +28,11 @@ def axes_iter(iterable: Iterable, ncols: int = 3, width: Real = 13, row_height: 
     current_axes = []
 
     for item in iterable:
+        first_axes_in_row = False
         if len(current_axes) == 0:
             # Need to create another row of axes.
             _, new_axes = pyplot.subplots(1, ncols, figsize=(width, row_height), sharey='row' if sharey else 'none')
-            if sharey and shared_ylabel is not None:
-                # We are sharing a y-axis, and want to set a common y-axis label. Set it here.
-                pyplot.ylabel(shared_ylabel)
+            first_axes_in_row = True
             if ncols == 1:
                 # Have to work around matplotlib inconsistency here.
                 current_axes = [new_axes]
@@ -41,6 +40,9 @@ def axes_iter(iterable: Iterable, ncols: int = 3, width: Real = 13, row_height: 
                 current_axes = list(new_axes)
         axes = current_axes.pop(0)
         pyplot.sca(axes)
+        if first_axes_in_row and sharey and shared_ylabel is not None:
+            # We are sharing a y-axis, and want to set a common y-axis label. Set it here.
+            pyplot.ylabel(shared_ylabel)
         yield item
         all_axes.append(axes)
         pyplot.tight_layout()
