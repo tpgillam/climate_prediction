@@ -11,7 +11,7 @@ def axes_iter(
         iterable: Iterable,
         num_cols: int = 3,
         width: Real = 13,
-        row_height: Real = 4,
+        height: Real = 4,
         tight_layout: bool = True,
         sharex: bool = False,
         sharey: bool = False,
@@ -24,7 +24,7 @@ def axes_iter(
     :param iterable: The elements over which to iterate.
     :param num_cols: The number of columns in the grid.
     :param width: The total width of the resulting grid in matplotlib units.
-    :param row_height: The height of each row in matplotlib units.
+    :param height: The height of each row in matplotlib units.
     :param tight_layout: Iff true, call pyplot.tight_layout() after each plot.
     :param sharex: If specified, rows will share x-axes.
         This necessitates all axes being created in a single figure.
@@ -45,7 +45,7 @@ def axes_iter(
         # If we are going to show in a single figure, figure out how many elements we have and pre-create axes.
         iterable = list(iterable)
         num_rows = int(math.ceil(len(iterable) / num_cols))
-        _, new_axes = pyplot.subplots(num_rows, num_cols, figsize=(width, row_height * num_rows),
+        _, new_axes = pyplot.subplots(num_rows, num_cols, figsize=(width, height * num_rows),
                                       sharex='all' if sharex else 'none', sharey='all' if sharey else 'none')
         current_axes = list(numpy.ravel(new_axes))
 
@@ -54,7 +54,7 @@ def axes_iter(
 
         if len(current_axes) == 0:
             # Need to create another row of axes.
-            _, new_axes = pyplot.subplots(1, num_cols, figsize=(width, row_height), sharey='row' if sharey else 'none')
+            _, new_axes = pyplot.subplots(1, num_cols, figsize=(width, height), sharey='row' if sharey else 'none')
             if num_cols == 1:
                 # Have to work around matplotlib inconsistency here.
                 current_axes = [new_axes]
